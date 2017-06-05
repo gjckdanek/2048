@@ -114,8 +114,14 @@ void drawBackgroundTitle(int x, int y) {
 	printf(" ¡Þ ESC : Quit");
 	gotoxy(0, 0);
 }
+void drawPanel(int x, int y) {
+	gotoxy(x, y);
+	printf("¦£¦¡¦¤");
+	gotoxy(x, y + 2);
+	printf("¦¦¦¡¦¥");
+}
 
-void getKey() {
+int getKey() {
 	int key = 0;
 
 	key = getch();
@@ -136,6 +142,7 @@ void getKey() {
 			break;
 		}
 	}
+	return 0;
 }
 
 int board[4][4] = {
@@ -150,9 +157,28 @@ int score;
 int main() {
 	setcursortype(NOCURSOR);
 	setWindow();
+	drawBackgroundFrame();
+	drawBackgroundTitle(4, 3);
+	drawPanel(6, 7);
+	drawPanel(12, 7);
+	drawPanel(18, 7);
+	drawPanel(24, 7);
+	drawPanel(6, 10);
+	drawPanel(12, 10);
+	drawPanel(18, 10);
+	drawPanel(24, 10);
+	drawPanel(6, 13);
+	drawPanel(12, 13);
+	drawPanel(18, 13);
+	drawPanel(24, 13);
+	drawPanel(6, 16);
+	drawPanel(12, 16);
+	drawPanel(18, 16);
+	drawPanel(24, 16);
 	while (true) {
-		drawBackgroundFrame();
-		drawBackgroundTitle(4, 3);
+		if (getKey()) {
+
+		}
 		getch();
 	}
 }
