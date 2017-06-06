@@ -1,5 +1,5 @@
 ﻿  2048.cpp
-e:\projects\2048\2048\2048.cpp(20): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-e:\projects\2048\2048\2048.cpp(132): warning C4553: '==': 의미 없는 연산자입니다. '='을(를) 사용하려고 했습니까?
-  2048.vcxproj -> E:\Projects\2048\Debug\2048.exe
-  2048.vcxproj -> E:\Projects\2048\Debug\2048.pdb (Partial PDB)
+c:\users\huh\desktop\2048\2048\2048\2048.cpp(20): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\huh\desktop\2048\2048\2048\2048.cpp(136): warning C4553: '==': 의미 없는 연산자입니다. '='을(를) 사용하려고 했습니까?
+  2048.vcxproj -> C:\Users\huh\Desktop\2048\2048\Debug\2048.exe
+  2048.vcxproj -> C:\Users\huh\Desktop\2048\2048\Debug\2048.pdb (Partial PDB)

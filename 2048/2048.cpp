@@ -120,6 +120,10 @@ void drawPanel(int x, int y) {
 	gotoxy(x, y + 2);
 	printf("¦¦¦¡¦¥");
 }
+void drawEmptyPanel(int x, int y) {
+	gotoxy(x, y);
+	printf("¡Û");
+}
 
 int getKey() {
 	int key = 0;
@@ -175,6 +179,24 @@ int main() {
 	drawPanel(12, 16);
 	drawPanel(18, 16);
 	drawPanel(24, 16);
+
+	drawEmptyPanel(8, 8);
+	drawEmptyPanel(14, 8);
+	drawEmptyPanel(20, 8);
+	drawEmptyPanel(26, 8);
+	drawEmptyPanel(8, 11);
+	drawEmptyPanel(14, 11);
+	drawEmptyPanel(20, 11);
+	drawEmptyPanel(26, 11);
+	drawEmptyPanel(8, 14);
+	drawEmptyPanel(14, 14);
+	drawEmptyPanel(20, 14);
+	drawEmptyPanel(26, 14);
+	drawEmptyPanel(8, 17);
+	drawEmptyPanel(14, 17);
+	drawEmptyPanel(20, 17);
+	drawEmptyPanel(26, 17);
+
 	while (true) {
 		if (getKey()) {
 
