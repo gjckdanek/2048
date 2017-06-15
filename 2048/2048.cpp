@@ -5,10 +5,18 @@
 #include<conio.h>
 #include<string>
 #include<cstring>
+#include<time.h>
 using namespace std;
 
 #define MAX_WINDOW_X 100
 #define MAX_WINDOW_Y 30
+
+#define FRAME_POS_X 4
+#define FRAME_POS_Y 3
+#define SCORE_FRAME_POS_X 40
+#define SCORE_FRAME_POS_Y 8
+
+#define BOARD_SIZE 4
 
 #define LEFT 75
 #define RIGHT 77
@@ -16,8 +24,22 @@ using namespace std;
 #define DOWN 80
 #define ESC 27
 
-void gotoxy(int x, int y) {
-	COORD pos = { x, y };
+const int PANEL_POS_X[BOARD_SIZE] = { FRAME_POS_X + 2, FRAME_POS_X + 8, FRAME_POS_X + 14, FRAME_POS_X + 20 };
+const int PANEL_POS_Y[BOARD_SIZE] = { FRAME_POS_Y + 4, FRAME_POS_Y + 7, FRAME_POS_Y + 10, FRAME_POS_Y + 13 };
+const int VALUE_POS_X[BOARD_SIZE] = { FRAME_POS_X + 4, FRAME_POS_X + 10, FRAME_POS_X + 16, FRAME_POS_X + 22 };
+const int VALUE_POS_Y[BOARD_SIZE] = { FRAME_POS_Y + 5, FRAME_POS_Y + 8, FRAME_POS_Y + 11, FRAME_POS_Y + 14 };
+
+int board[4][4] = {
+	{ 0,0,0,0 },
+	{ 1,0,4,0 },
+	{ 0,2,0,0 },
+	{ 0,0,0,8 }
+};
+
+int score;
+
+inline void gotoxy(int x, int y) {
+	COORD pos = { (SHORT)x, (SHORT)y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
@@ -47,21 +69,52 @@ void setWindow() {
 	system("cls");
 }
 
+void drawBackgroundFrame();
+void drawBackgroundTitle(int x, int y);
+
+void drawPanel(int x, int y, int value);
+void drawEmptyPanel(int x, int y);
+void drawBoard();
+
+void drawScore(int x, int y);
+
+void reset();
+void newPanelNumber();
+int getKey();
+
+int main() {
+	setcursortype(NOCURSOR);
+	setWindow();
+
+	reset();
+
+	drawBoard();
+
+	drawScore(SCORE_FRAME_POS_X, SCORE_FRAME_POS_Y);
+	while (true) {
+		if (getKey()) {
+			
+		}
+		getch();
+		newPanelNumber();
+	}
+}
+
 void drawBackgroundFrame() {
 	gotoxy(0, 0);
 	string frame = "忙";
-	for (int i = 0; i < MAX_WINDOW_X*0.5 -2; ++i) {
+	for (int i = 0; i < MAX_WINDOW_X*0.5 - 2; ++i) {
 		frame += "式";
 	}
 	frame += "忖\n";
 	printf(frame.c_str());
 
 	frame = "弛";
-	for (int i = 0; i < MAX_WINDOW_X -4; ++i) {
+	for (int i = 0; i < MAX_WINDOW_X - 4; ++i) {
 		frame += " ";
 	}
 	frame += "弛\n";
-	for (int i = 0; i < MAX_WINDOW_Y -2; ++i) {
+	for (int i = 0; i < MAX_WINDOW_Y - 2; ++i) {
 		printf(frame.c_str());
 	}
 
@@ -114,17 +167,91 @@ void drawBackgroundTitle(int x, int y) {
 	printf(" ﹢ ESC : Quit");
 	gotoxy(0, 0);
 }
-void drawPanel(int x, int y) {
+
+void clearPanel(int x, int y) {
+	gotoxy(x, y);
+	printf("      ");
+	gotoxy(x, y + 1);
+	printf("      ");
+	gotoxy(x, y + 2);
+	printf("      ");
+}
+void drawPanel(int x, int y, int value) {
+	//clearPanel(x, y);
 	gotoxy(x, y);
 	printf("忙式忖");
+	gotoxy(x, y + 1);
+	printf("%6d", value);
 	gotoxy(x, y + 2);
 	printf("戌式戎");
 }
 void drawEmptyPanel(int x, int y) {
+	//clearPanel(x, y);
 	gotoxy(x, y);
 	printf("∞");
 }
+void drawBoard() {
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		for (int j = 0; j < BOARD_SIZE; ++j) {
+			if (board[i][j] == 0) {
+				drawEmptyPanel(VALUE_POS_X[i], VALUE_POS_Y[j]);
+			}
+			else {
+				drawPanel(PANEL_POS_X[i], PANEL_POS_Y[j], board[i][j]);
+			}
+		}
+	}
+}
 
+void drawScore(int x, int y) {
+	gotoxy(x, y);
+	printf("忙式式式式式式式式式式式式忖");
+	gotoxy(x, y + 1);
+	printf("弛  Count : 0000000");
+	gotoxy(x, y + 2);
+	printf("弛  Score : 0000000");
+	gotoxy(x, y + 3);
+	printf("戌式式式式式式式式式式式式戎");
+}
+
+void reset() {
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		for (int j = 0; j < BOARD_SIZE; ++j) {
+			board[i][j] = 0;
+		}
+	}
+
+	score = 0;
+
+	drawBackgroundFrame();
+	drawBackgroundTitle(FRAME_POS_X, FRAME_POS_Y);
+
+	newPanelNumber();
+	newPanelNumber();
+}
+void newPanelNumber() {
+	int randomNumber = 0;
+	int count = 0;
+	int *pBoard[BOARD_SIZE * BOARD_SIZE];
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		for (int j = 0; j < BOARD_SIZE; ++j) {
+			if (board[i][j] == 0) {
+				pBoard[count] = &board[i][j];
+				++count;
+			}
+		}
+	}
+	
+	srand(time(0));
+	randomNumber = rand() % count;
+
+	*pBoard[randomNumber] = 2;
+	drawBoard();
+	*pBoard[randomNumber] = 0;
+	drawBoard();
+	*pBoard[randomNumber] = 2;
+	drawBoard();
+}
 int getKey() {
 	int key = 0;
 
@@ -133,7 +260,7 @@ int getKey() {
 		exit(0);
 	}
 	if (key == 0xE0 || key == 0) {
-		key == getch();
+		key = getch();
 
 		switch (key) {
 		case LEFT:
@@ -147,60 +274,4 @@ int getKey() {
 		}
 	}
 	return 0;
-}
-
-int board[4][4] = {
-	{ 0,0,0,0 },
-	{ 0,0,0,0 },
-	{ 0,0,0,0 },
-	{ 0,0,0,0 }
-};
-
-int score;
-
-int main() {
-	setcursortype(NOCURSOR);
-	setWindow();
-	drawBackgroundFrame();
-	drawBackgroundTitle(4, 3);
-	drawPanel(6, 7);
-	drawPanel(12, 7);
-	drawPanel(18, 7);
-	drawPanel(24, 7);
-	drawPanel(6, 10);
-	drawPanel(12, 10);
-	drawPanel(18, 10);
-	drawPanel(24, 10);
-	drawPanel(6, 13);
-	drawPanel(12, 13);
-	drawPanel(18, 13);
-	drawPanel(24, 13);
-	drawPanel(6, 16);
-	drawPanel(12, 16);
-	drawPanel(18, 16);
-	drawPanel(24, 16);
-
-	drawEmptyPanel(8, 8);
-	drawEmptyPanel(14, 8);
-	drawEmptyPanel(20, 8);
-	drawEmptyPanel(26, 8);
-	drawEmptyPanel(8, 11);
-	drawEmptyPanel(14, 11);
-	drawEmptyPanel(20, 11);
-	drawEmptyPanel(26, 11);
-	drawEmptyPanel(8, 14);
-	drawEmptyPanel(14, 14);
-	drawEmptyPanel(20, 14);
-	drawEmptyPanel(26, 14);
-	drawEmptyPanel(8, 17);
-	drawEmptyPanel(14, 17);
-	drawEmptyPanel(20, 17);
-	drawEmptyPanel(26, 17);
-
-	while (true) {
-		if (getKey()) {
-
-		}
-		getch();
-	}
 }
